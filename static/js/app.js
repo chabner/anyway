@@ -441,6 +441,22 @@ $(function () {
             };
             this.map = new google.maps.Map(this.$el.find("#map_canvas").get(0), mapOptions);
 
+            var mapHeadline = document.createElement('a');
+            mapHeadline.className = "map-headline";
+            mapHeadline.innerHTML = $("#map-headline").html();
+            mapHeadline.href = "/";
+            mapHeadline.target = "_blank";
+
+            google.maps.event.addDomListener(mapHeadline, 'click', function () {
+                mapHeadline.href = document.URL + "?" + this.getCurrentUrlParams();
+            }.bind(this));
+
+            if (!MAP_ONLY)
+                mapHeadline.style = "display:none";
+
+
+            this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(mapHeadline);
+
             var mapControlDiv = document.createElement('div');
             mapControlDiv.className = "map-control";
             mapControlDiv.innerHTML = $("#map-control").html();
@@ -474,6 +490,7 @@ $(function () {
                 $iframe_link.html('<iframe src="' + url + '&map_only=true"></iframe>');
                 $(".js-btn-copytoclipboard").on("click", function(){
                     $("#" + $(this).data("copy")).select();
+                    document.execCommand('copy');
                 });
                 this.linkMap();
             }.bind(this));
